@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"/>
+  <title>URL 重定向生成器</title>
+  
+  <link rel="stylesheet" href="https://unpkg.com/mdui@2/mdui.css">
+  <script src="https://unpkg.com/mdui@2/mdui.global.js"></script>
+</head>
+<body>
+  <mdui-top-app-bar>
+    <mdui-top-app-bar-title>URL 重定向生成器</mdui-top-app-bar-title>
+  </mdui-top-app-bar>
+
+  <div style="max-width: 620px; margin: 40px auto; padding: 0 16px;">
+    <mdui-card style="width: 100%; padding: 32px 24px;">
+      <h2 style="margin: 0 0 32px 0; text-align: center;">创建重定向链接</h2>
+      
+      <mdui-text-field
+        id="url"
+        label="目标 URL *"
+        placeholder="https://example.com"
+        variant="outlined"
+        style="margin-bottom: 32px; width: 100%;"
+        required>
+      </mdui-text-field>
+
+      <!-- 过期时间单选 -->
+      <mdui-radio-group id="expireType" value="permanent">
+        <mdui-radio value="permanent">永久有效</mdui-radio>
+        <mdui-radio value="expire">设置过期时间</mdui-radio>
+      </mdui-radio-group>
+
+      <!-- 时间选择器（默认隐藏） -->
+      <mdui-text-field
+        id="expire"
+        label="过期时间"
+        type="datetime-local"
+        variant="outlined"
+        style="margin-top: 16px; width: 100%; display: none;"
+      ></mdui-text-field>
+
+      <mdui-button id="submitBtn" variant="filled" full-width style="margin-top: 32px;">
+        生成重定向链接
+      </mdui-button>
+
+      <!-- 结果区域 -->
+      <div id="result" style="margin-top: 32px; display: none;">
+        <mdui-divider style="margin: 24px 0;"></mdui-divider>
+        
+        <p><strong>重定向链接生成成功：</strong></p>
+        
+        <mdui-text-field
+          id="shortUrl"
+          variant="outlined"
+          readonly
+          style="margin-bottom: 16px; width: 100%;">
+        </mdui-text-field>
+
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <mdui-button id="copyBtn" variant="outlined" icon="content_copy">
+            复制链接
+          </mdui-button>
+          <mdui-button id="resetBtn" variant="text">
+            重新生成
+          </mdui-button>
+        </div>
+
+        <div id="expireInfo" style="margin-top: 20px; font-size: 0.95em; color: var(--mdui-color-on-surface-variant);"></div>
+      </div>
+    </mdui-card>
+  </div>
+
+  <script>
+    const expireType = document.getElementById('expireType');
+    const expireField = document.getElementById('expire');
+    const submitBtn = document.getElementById('submitBtn');
+    const resultDiv = document.getElementById('result');
+    const shortUrlInput = document.getElementById('shortUrl');
+    const expireInfo = document.getElementById('expireInfo');
+    const copyBtn = document.getElementById('copyBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    // 单选切换显示/隐藏时间选择器
+    expireType.addEventListener('change', () => {
+      if (expireType.value === 'expire') {
+        expireField.style.display = 'block';
+      } else {
+        expireField.style.display = 'none';
+        expireField.value = ''; // 清空已选时间
+      }
+    });
+
+    // 生成链接
+    submitBtn.addEventListener('click', () => {
+      const urlInput = document.getElementById('url').value.trim();
+      const expireTypeValue = expireType.value;
+      const expireValue = expireField.value;
+
+      if (!urlInput) {
+        mdui.snackbar({ message: '请输入目标 URL' });
+        return;
+      }
+
+      if (expireTypeValue === 'expire' && !expireValue) {
+        mdui.snackbar({ message: '请选择过期时间' });
+        return;
+      }
+
+      // 模拟生成短链接
+      const fakeShortCode = 'r' + Math.random().toString(36).substring(2, 11);
+      const shortLink = `${window.location.origin}/redirect/${fakeShortCode}`;
+
+      shortUrlInput.value = shortLink;
+
+      if (expireTypeValue === 'expire') {
+        const expireDate = new Date(expireValue);
+        expireInfo.innerHTML = `此链接将于 <strong>${expireDate.toLocaleString('zh-CN')}</strong> 过期`;
+      } else {
+        expireInfo.innerHTML = `<span style="color: var(--mdui-color-primary);">此链接永久有效</span>`;
+      }
+
+      resultDiv.style.display = 'block';
+      resultDiv.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // 复制链接
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(shortUrlInput.value).then(() => {
+        mdui.snackbar({ message: '已复制到剪贴板' });
+      });
+    });
+
+    // 重新生成
+    resetBtn.addEventListener('click', () => {
+      resultDiv.style.display = 'none';
+      document.getElementById('url').value = '';
+      expireType.value = 'permanent';
+      expireField.style.display = 'none';
+      expireField.value = '';
+    });
+  </script>
+</body>
+</html>

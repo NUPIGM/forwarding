@@ -1,0 +1,29 @@
+{
+  "name": "forwarding",
+  "main": "src/index.js",
+  "workers_dev": true,
+  "preview_urls": false,
+  "compatibility_date": "2026-05-14",
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "persist": true,
+      "invocation_logs": true
+    },
+    "traces": {
+      "enabled": false,
+      "persist": true,
+      "head_sampling_rate": 1
+    }
+  },
+	"assets": { "directory": "./dist/", "binding": "ASSETS" },
+  	"kv_namespaces": [
+		{
+			"binding": "short_link_kv",
+			"id": "19b7cfc1981742a2862065abbc0badc2"
+		}
+	]
+}
