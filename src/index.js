@@ -10,13 +10,24 @@ export default {
 				return new Response(await workerIP());
 			case '/shortlink':
 				if (request.method === 'POST') {
-					const formData = await request.formData();
-					const longUrl = formData.get('url') || url.origin;
-					const expired = formData.get('expired') || undefined;
-					const result = await saveUrl(env, longUrl, expired);
-					return new Response(result);
+					try {
+						const formData = await request.formData();
+						const longUrl = formData.get('url')
+						new URL(longUrl)
+						const expire = formData.get('expire') || undefined;
+						const result = await saveUrl(env, longUrl, expire);
+						return new Response(result);
+					} catch (error) {
+						console.info('请求体错误',error)
+						return new Response('请求体错误')
+					}
 				} else if (request.method === 'DELETE') {
-					const formData = await request.formData();
+					try {
+						const formData = await request.formData();
+					} catch (error) {
+						console.info('请求体错误',error)
+						return new Response('请求体错误')
+					}
 					const auth = request.headers.get('secret');
 					const code = formData.get('code');
 					const result = await delUrl(env, auth, code);
@@ -34,11 +45,11 @@ export default {
 					return new Response(result);
 				}
 				//执行重定向
-	const code = url.pathname.slice(1);
-				const result=await redirect(env,code);
-				console.log(result)
+				const code = url.pathname.slice(1);
+				const result = await directUrl(env, code);
+				console.info('重定向', code,result);
 				if (result) {
-					return Response.redirect(result, 302)
+					return Response.redirect(result, 302);
 				}
 
 				// 访问静态文件，404直接返回首页
@@ -59,16 +70,15 @@ async function workerIP() {
 	});
 	return res.body;
 }
-async function redirect(env,key) {
-		let value = await env.short_link_kv.get(key);
-			 value = JSON.parse(value);
-			if (!value||value.expired < Date.now()) {
-				return null
-			}
-			value.visits += 1;
-			await env.short_link_kv.put(key, JSON.stringify(value));
-			return value.url
-	
+async function directUrl(env, key) {
+	let value = await env.short_link_kv.get(key);
+	value = JSON.parse(value);
+	if (!value || value.expired < Date.now()) {
+		return null;
+	}
+	value.visits += 1;
+	await env.short_link_kv.put(key, JSON.stringify(value));
+	return value.url;
 }
 async function uniproxy(request) {
 	const url = new URL(request.url);

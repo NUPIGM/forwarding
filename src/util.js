@@ -10,7 +10,7 @@ export async function saveUrl(env, url, exp = '9999-12-31T23:59') {
 
 		// 储存到KV中和格式化数据
 		await env.short_link_kv.put(shortCode, JSON.stringify(shortValue));
-		console.info('生成成功');
+		console.info('生成成功',shortCode,url);
 		return JSON.stringify({
 			status: 1,
 			shortCode,
@@ -23,10 +23,10 @@ export async function saveUrl(env, url, exp = '9999-12-31T23:59') {
 }
 
 export async function delUrl(env, auth, key) {
-	const admin = env.admin || 'admin';
+	const secret = env.SECRET || 'admin';
 
 	// 验证
-	if (auth !== admin) {
+	if (auth !== secret) {
 		return 'Authorization error';
 	}
 	if (key) {
