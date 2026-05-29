@@ -2,161 +2,131 @@
 <html lang="zh-CN">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" />
-		<title>URL 重定向生成器</title>
-
-		<link rel="stylesheet" href="https://unpkg.com/mdui@2/mdui.css" />
-		<script src="https://unpkg.com/mdui@2/mdui.global.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, shrink-to-fit=no" />
+		<title>重定向生成器</title>
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+		<link type="text/tailwindcss" rel="stylesheet" href="style.css" />
+		<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 	</head>
 	<body>
-		<mdui-top-app-bar>
-			<mdui-top-app-bar-title>URL 重定向生成器</mdui-top-app-bar-title>
-		</mdui-top-app-bar>
-
-		<div style="max-width: 620px; margin: 40px auto; padding: 0 16px">
-			<mdui-card style="width: 100%; padding: 32px 24px">
-				<h2 style="margin: 0 0 32px 0; text-align: center">创建重定向链接</h2>
-
-				<mdui-text-field
-					id="url"
-					label="目标 URL *"
-					placeholder="https://example.com"
-					variant="outlined"
-					style="margin-bottom: 32px; width: 100%"
-					required
-					name="longUrl"
-					autocomplete="on"
-				>
-				</mdui-text-field>
-
-				<!-- 过期时间单选 -->
-				<mdui-radio-group id="expireType" value="permanent">
-					<mdui-radio value="permanent">永久有效</mdui-radio>
-					<mdui-radio value="expire">设置过期时间</mdui-radio>
-				</mdui-radio-group>
-
-				<!-- 时间选择器（默认隐藏） -->
-				<mdui-text-field
-					id="expire"
-					label="过期时间"
-					type="datetime-local"
-					variant="outlined"
-					style="margin-top: 16px; width: 100%; display: none"
-				></mdui-text-field>
-
-				<mdui-button id="submitBtn" variant="filled" full-width style="margin-top: 32px"> 生成重定向链接 </mdui-button>
-
-				<!-- 结果区域 -->
-				<div id="result" style="margin-top: 32px; display: none">
-					<mdui-divider style="margin: 24px 0"></mdui-divider>
-
-					<p><strong>重定向链接生成成功：</strong></p>
-
-					<mdui-text-field id="shortUrl"name="shortUrl" variant="outlined" autocomplete="on" readonly style="margin-bottom: 16px; width: 100%" > </mdui-text-field>
-
-					<div style="display: flex; gap: 12px; flex-wrap: wrap">
-						<mdui-button id="copyBtn" variant="outlined" icon=""> 复制链接 </mdui-button>
-						<mdui-button id="resetBtn" variant="text"> 重新生成 </mdui-button>
-					</div>
-
-					<div id="expireInfo" style="margin-top: 20px; font-size: 0.95em; color: var(--mdui-color-on-surface-variant)"></div>
+		<header class="sticky top-0 z-40 w-full mx-auto border-b border-slate-200 bg-white/80 backdrop-blur">
+			<div class="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
+				<div class="flex items-end gap-2">
+					<svg
+						t="1779807998071"
+						class="icon"
+						viewBox="0 0 1024 1024"
+						version="1.1"
+						xmlns="http://www.w3.org/2000/svg"
+						p-id="5736"
+						width="30"
+						height="30"
+					>
+						<path
+							d="M113.664 602.112h81.92V921.6h-81.92zM345.088 499.712h81.92V921.6h-81.92zM576.512 562.176h81.92v358.4h-81.92zM807.936 379.904h81.92v540.672h-81.92z"
+							fill="#437DFF"
+							p-id="5737"
+						></path>
+						<path
+							d="M175.104 537.6l-39.936-47.104 242.688-200.704 37.888-1.024 195.584 149.504L834.56 133.12l49.152 35.84-241.664 331.776-43.008 6.144-201.728-154.624z"
+							fill="#63F7DE"
+							p-id="5738"
+						></path>
+						<path d="M848.896 164.864m-61.44 0a61.44 61.44 0 1 0 122.88 0 61.44 61.44 0 1 0-122.88 0Z" fill="#63F7DE" p-id="5739"></path>
+					</svg>
+					<h1 class="text-2xl font-bold text-slate-900">重定向生成器</h1>
 				</div>
-			</mdui-card>
-		</div>
+				<a href="https://www.whatlearn.qzz.io">
+					<svg
+						t="1779808085560"
+						class="icon"
+						viewBox="0 0 1024 1024"
+						version="1.1"
+						xmlns="http://www.w3.org/2000/svg"
+						p-id="6721"
+						width="20"
+						height="20"
+					>
+						<path
+							d="M320.945 179.846H825.1c48.077 0 80.562 22.09 98.752 58.472 9.097 19.491 12.995 40.28 12.995 54.574l-1.3 7.796-83.16 292.357c-3.898 15.593-19.49 23.39-35.082 19.49-15.593-3.897-23.39-19.49-19.49-35.083l83.159-292.357-1.3 7.796c0-6.497-1.3-18.191-6.497-28.586-7.796-16.892-22.089-25.987-46.778-25.987H317.046l40.281 40.28c11.694 11.694 11.694 29.886 0 40.28-11.694 11.695-29.885 11.695-40.281 0l-87.057-87.057c-11.695-11.695-11.695-29.885 0-40.281l87.057-88.357c11.694-11.695 29.886-11.695 40.281 0 11.694 11.694 11.694 29.886 0 40.28l-36.382 36.383zM713.636 840.154H209.479c-48.077 0-80.561-22.089-98.752-58.472-9.095-19.49-12.994-40.28-12.994-54.573l1.3-7.795 83.16-292.359c3.897-15.593 19.49-23.389 35.083-19.491 15.592 3.898 23.388 19.491 19.49 35.083l-81.861 292.357 1.3-7.796c0 6.497 1.299 18.191 6.497 28.586 7.796 16.892 22.089 25.987 46.777 25.987h509.354l-40.281-40.28c-11.694-11.693-11.694-29.886 0-40.28 11.693-11.693 29.886-11.693 40.281 0l87.057 87.058c11.694 11.693 11.694 29.886 0 40.281l-88.356 88.356c-11.695 11.693-29.886 11.693-40.281 0-11.693-11.694-11.693-29.885 0-40.28l36.383-36.382z"
+							fill="#808080"
+							p-id="6722"
+						></path>
+						<path
+							d="M426.094 632.331c-16.568 0-30-13.432-30-30V349.845c0-16.568 13.432-30 30-30s30 13.432 30 30v252.486c0 16.568-13.432 30-30 30zM552.588 632.331c-16.568 0-30-13.432-30-30V437.84c0-16.568 13.432-30 30-30s30 13.432 30 30v164.491c0 16.568-13.432 30-30 30zM679.082 632.331c-16.568 0-30-13.432-30-30v-91.994c0-16.568 13.432-30 30-30s30 13.432 30 30v91.994c0 16.568-13.432 30-30 30z"
+							fill="#33DEB4"
+							opacity=".4"
+							p-id="6723"
+						></path>
+						<path
+							d="M386.094 672.331c-16.568 0-30-13.432-30-30V389.845c0-16.568 13.432-30 30-30s30 13.432 30 30v252.486c0 16.568-13.431 30-30 30zM512.588 672.331c-16.568 0-30-13.432-30-30V477.84c0-16.568 13.432-30 30-30s30 13.432 30 30v164.491c0 16.568-13.432 30-30 30zM639.082 672.331c-16.568 0-30-13.432-30-30v-91.994c0-16.568 13.432-30 30-30s30 13.432 30 30v91.994c0 16.568-13.432 30-30 30z"
+							fill="#33DEB4"
+							p-id="6724"
+						></path></svg
+				></a>
+			</div>
+		</header>
+		<main class="mx-auto max-w-5xl px-4 py-8">
+			<!-- 工具介绍 -->
+			<div class="mb-8 rounded-2xl bg-indigo-500 p-6 text-white shadow-xl shadow-brand-500/10">
+				<h2 class="text-xl font-bold">创建重定向链接</h2>
+				<p class="mt-2 text-sm text-brand-100 max-w-2xl">一个简单、快速的链接跳转与管理工具。支持短链接生成、访问统计以及自定义跳转页。</p>
+			</div>
+			<!-- 提交表单 -->
+			<form action="/shortlink" method="post" target="result_iframe">
+				<div>
+					<label class="block text-sm font-medium text-slate-600">目标 URL *</label>
+					<input
+						class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:bg-slate-50"
+						placeholder="https://example.com"
+						type="url"
+						id="url"
+						name="url"
+						autocomplete="on"
+						required
+					/>
+				</div>
+				<div class="text-sm font-medium text-slate-600 p-4 *:px-2">
+					<input type="radio" checked name="expireType" id="forever" value="" /><label for="forever">永久有效</label>
+					<input type="radio" name="expireType" id="future" value="1" /><label for="future">设置过期时间</label>
+				</div>
+				<input class="hidden" type="datetime-local" name="expire" id="expireInfo" />
+				<!-- 提交按钮 -->
+				<button
+					id="submitBtn"
+					type="submit"
+					class="peer w-full bg-sky-400 flex justify-center items-center gap-2 rounded-xl py-3 px-4 text-base font-bold text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all"
+				>
+					<span class="flex items-center gap-2">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
+							/>
+						</svg>
+						生成重定向链接
+					</span>
+				</button>
+			</form>
+			<!-- 结果显示 -->
+			<div id="result"></div>
+			<iframe name="result_iframe" width="100%"></iframe>
+		</main>
 
 		<script>
-			const expireType = document.getElementById('expireType');
-			const expireField = document.getElementById('expire');
-			const submitBtn = document.getElementById('submitBtn');
-			const resultDiv = document.getElementById('result');
-			const shortUrlInput = document.getElementById('shortUrl');
+			const futureField = document.getElementById('future');
+			const foreverField = document.getElementById('forever');
 			const expireInfo = document.getElementById('expireInfo');
-			const copyBtn = document.getElementById('copyBtn');
-			const resetBtn = document.getElementById('resetBtn');
-
-			// 单选切换显示/隐藏时间选择器
-			expireType.addEventListener('change', () => {
-				if (expireType.value === 'expire') {
-					expireField.style.display = 'block';
-				} else {
-					expireField.style.display = 'none';
-					expireField.value = ''; // 清空已选时间
-				}
+			futureField.addEventListener('change', () => {
+				expireInfo.style.display = 'block';
+				expireInfo.setAttribute('required', '');
 			});
-
-			// 生成链接
-			submitBtn.addEventListener('click', async () => {
-				const urlInput = document.getElementById('url').value.trim();
-				const expireTypeValue = expireType.value;
-				const expireValue = expireField.value;
-
-				if (!urlInput) {
-					mdui.snackbar({ message: '请输入目标 URL' });
-					return;
-				}
-
-				if (expireTypeValue === 'expire' && !expireValue) {
-					mdui.snackbar({ message: '请选择过期时间' });
-					return;
-				}
-
-				// 模拟生成短链接
-				const formData = new FormData();
-				// 添加普通字段
-				formData.append('url', urlInput);
-				if (expireValue) {
-					const utc=subtractHours(expireValue,8)
-					formData.append('expire', utc);
-				}
-
-				const result = await fetch('/shortlink', {
-					method: 'POST',
-					body: formData,
-				})
-					.then((res) => res.json())
-					.then((data) => {
-						return data;
-					});
-				console.log(result);
-				const fakeShortCode = result.shortCode;
-				const shortLink = `${window.location.origin}/${fakeShortCode}`;
-
-				shortUrlInput.value = shortLink;
-
-				if (expireTypeValue === 'expire') {
-					const expireDate = new Date(expireValue);
-					expireInfo.innerHTML = `此链接将于 <strong>${expireDate.toLocaleString('zh-CN')}</strong> 过期`;
-				} else {
-					expireInfo.innerHTML = `<span style="color: var(--mdui-color-primary);">此链接永久有效</span>`;
-				}
-
-				resultDiv.style.display = 'block';
-				resultDiv.scrollIntoView({ behavior: 'smooth' });
+			foreverField.addEventListener('change', () => {
+				expireInfo.value = '';
+				expireInfo.removeAttribute('required');
+				expireInfo.style.display = 'none';
 			});
-
-			// 复制链接
-			copyBtn.addEventListener('click', () => {
-				navigator.clipboard.writeText(shortUrlInput.value).then(() => {
-					mdui.snackbar({ message: '已复制到剪贴板' });
-				});
-			});
-
-			// 重新生成
-			resetBtn.addEventListener('click', () => {
-				resultDiv.style.display = 'none';
-				document.getElementById('url').value = '';
-				expireType.value = 'permanent';
-				expireField.style.display = 'none';
-				expireField.value = '';
-			});
-			function subtractHours(timeStr, hours) {
-				const date = new Date(timeStr + ':00'); // 补全秒数
-				date.setHours(date.getHours() - hours);
-
-				// 输出格式：2026-05-22T04:48
-				const result = date.toISOString().slice(0, 16);
-				return result;
-			}
 		</script>
 	</body>
 </html>

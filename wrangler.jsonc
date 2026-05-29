@@ -28,5 +28,10 @@
 	],
   "vars":{
     "SECRET":"secretadmin"
-  }
+  },
+	"dev":{
+		"ip":"0.0.0.0",
+		"host":"loacalhost",
+		"port":80
+	}
 }

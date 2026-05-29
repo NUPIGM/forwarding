@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "deploy": "wrangler deploy",
-    "dev": "wrangler dev",
-    "start": "wrangler dev"
+    "dev": "wrangler dev"
   },
   "devDependencies": {
     "wrangler": "^4.93.1"
+  },
+  "dependencies": {
+    "@mdui/icons": "^1.0.3"
   }
 }

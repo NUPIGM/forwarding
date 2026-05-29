@@ -10,11 +10,12 @@ export async function saveUrl(env, url, exp = '9999-12-31T23:59') {
 
 		// 储存到KV中和格式化数据
 		await env.short_link_kv.put(shortCode, JSON.stringify(shortValue));
-		console.info('生成成功',shortCode,url);
+		console.info('生成成功', shortCode, url, exp);
 		return JSON.stringify({
-			status: 1,
+			status: 200,
 			shortCode,
 			url,
+			exp,
 		});
 	} catch (error) {
 		console.warn('formData err:\n', error);

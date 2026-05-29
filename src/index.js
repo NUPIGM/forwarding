@@ -6,27 +6,29 @@ export default {
 		const target = url.pathname;
 
 		switch (target) {
+			case '/':
+				return Response.redirect('/index', 302);
 			case '/ip':
 				return new Response(await workerIP());
 			case '/shortlink':
 				if (request.method === 'POST') {
 					try {
 						const formData = await request.formData();
-						const longUrl = formData.get('url')
-						new URL(longUrl)
+						const longUrl = formData.get('url');
+						new URL(longUrl);
 						const expire = formData.get('expire') || undefined;
 						const result = await saveUrl(env, longUrl, expire);
 						return new Response(result);
 					} catch (error) {
-						console.info('请求体错误',error)
-						return new Response('请求体错误')
+						console.info('请求体错误', error);
+						return new Response('请求体错误');
 					}
 				} else if (request.method === 'DELETE') {
 					try {
 						const formData = await request.formData();
 					} catch (error) {
-						console.info('请求体错误',error)
-						return new Response('请求体错误')
+						console.info('请求体错误', error);
+						return new Response('请求体错误');
 					}
 					const auth = request.headers.get('secret');
 					const code = formData.get('code');
@@ -47,17 +49,19 @@ export default {
 				//执行重定向
 				const code = url.pathname.slice(1);
 				const result = await directUrl(env, code);
-				console.info('重定向', code,result);
+				console.info('重定向', code, result);
 				if (result) {
 					return Response.redirect(result, 302);
 				}
 
 				// 访问静态文件，404直接返回首页
 				const assets = await env.ASSETS.fetch(request);
+				if (assets.status === 200) {
+					return assets;
+				}
 				if (assets.status === 404) {
 					return await env.ASSETS.fetch(`${url.origin}/`);
 				}
-				return assets;
 				break;
 		}
 	},
