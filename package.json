@@ -8,8 +8,5 @@
   },
   "devDependencies": {
     "wrangler": "^4.93.1"
-  },
-  "dependencies": {
-    "@mdui/icons": "^1.0.3"
   }
 }

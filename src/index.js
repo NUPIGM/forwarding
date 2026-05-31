@@ -10,7 +10,7 @@ export default {
 				return Response.redirect('/index', 302);
 			case '/ip':
 				return new Response(await workerIP());
-			case '/shortlink':
+			case '/short':
 				if (request.method === 'POST') {
 					try {
 						const formData = await request.formData();
@@ -20,14 +20,14 @@ export default {
 						const result = await saveUrl(env, longUrl, expire);
 						return new Response(result);
 					} catch (error) {
-						console.info('请求体错误', error);
+						console.error('请求体错误', error);
 						return new Response('请求体错误');
 					}
 				} else if (request.method === 'DELETE') {
 					try {
 						const formData = await request.formData();
 					} catch (error) {
-						console.info('请求体错误', error);
+						console.error('请求体错误', error);
 						return new Response('请求体错误');
 					}
 					const auth = request.headers.get('secret');
@@ -72,7 +72,7 @@ async function workerIP() {
 		method: 'GET',
 		headers: { 'User-Agent': 'Cloudflare-Worker-IP-Checker' },
 	});
-	return res.body;
+	return res.text();
 }
 async function directUrl(env, key) {
 	let value = await env.short_link_kv.get(key);

@@ -23,15 +23,15 @@
 	"kv_namespaces": [
 		{
 			"binding": "short_link_kv",
-			"id": "19b7cfc1981742a2862065abbc0badc2"
-		}
+			"id": "19b7cfc1981742a2862065abbc0badc2",
+		},
 	],
-  "vars":{
-    "SECRET":"secretadmin"
-  },
-	"dev":{
-		"ip":"0.0.0.0",
-		"host":"loacalhost",
-		"port":80
-	}
+	"vars": {
+		"SECRET": "admin",
+	},
+	"dev": {
+		"ip": "0.0.0.0",
+		"host": "loacalhost",
+		"port": 80,
+	},
 }

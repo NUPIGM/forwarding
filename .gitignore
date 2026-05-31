@@ -165,3 +165,7 @@ out
 .env*
 !.env.example
 .wrangler/
+wrangler.local.jsonc
+.vscode/
+.prettierrc
+.editorconfig
